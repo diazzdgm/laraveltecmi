@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Models\Universe;
 
 class UniverseSeeder extends Seeder
 {
@@ -15,9 +16,14 @@ class UniverseSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('universes')->insert([
-            ['name' => 'Marvel'],
-            ['name' =>'DC'],
-        ])
+        Universe::create([
+            'name' => 'Marvel'
+           ]);
+           Universe::create([
+            'name' => 'DC'
+           ]);
+           Universe::create([
+            'name' => 'The boys'
+           ]);
     }
 }
