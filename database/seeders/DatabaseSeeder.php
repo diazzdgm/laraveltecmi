@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\SuperHero;
 
 
 class DatabaseSeeder extends Seeder
@@ -19,5 +20,7 @@ class DatabaseSeeder extends Seeder
         GenderSeeder::class,
         UniverseSeeder::class
        ]);
+
+       SuperHero::factory(10)->create();
     }
 }
