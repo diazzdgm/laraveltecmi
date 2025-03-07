@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\GenderControler;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Controller;
+use App\Models\Universe;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +19,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/gender', [GenderControler::class, 'index']);
