@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Response;
+use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\Factory;
 use App\Models\Universe;
 use Illuminate\Http\Request;
 
@@ -12,7 +15,7 @@ class UniverseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View|Factory|Response
     {
         $universes = Universe::all();
         return view('universes.index', compact('universes'));
@@ -21,7 +24,7 @@ class UniverseController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -32,14 +35,14 @@ class UniverseController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
         Universe::create([
             'name' => $request->name,
         ]);
-        
+
         return to_route('universes.index');
     }
 
@@ -47,7 +50,7 @@ class UniverseController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function show(string $id)
     {
@@ -59,7 +62,7 @@ class UniverseController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function edit($id)
     {
@@ -72,7 +75,7 @@ class UniverseController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, $id)
     {
@@ -80,7 +83,7 @@ class UniverseController extends Controller
         $universe->update([
             'name' => $request->name,
         ]);
-        
+
         return to_route('universes.index');
     }
 
@@ -88,13 +91,13 @@ class UniverseController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
         $universe = Universe::find($id);
         $universe->delete();
-        
+
         return to_route('universes.index');
     }
 }

@@ -4,15 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Gender;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class GenderController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(): View
     {
         $genders = Gender::all();
         return view('genders.index', compact('genders'));
@@ -21,9 +23,9 @@ class GenderController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(): View
     {
         return view('genders.create');
     }
@@ -32,9 +34,9 @@ class GenderController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         Gender::create([
             'name' => $request->name,
@@ -46,10 +48,10 @@ class GenderController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  string  $id
+     * @return \Illuminate\View\View
      */
-    public function show(string $id)
+    public function show(string $id): View
     {
         $gender = Gender::with('superheroes')->find($id);
         return view('genders.show', compact('gender'));
@@ -58,10 +60,10 @@ class GenderController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  string  $id
+     * @return \Illuminate\View\View
      */
-    public function edit($id)
+    public function edit(string $id): View
     {
         $gender = Gender::find($id);
         return view('genders.edit', compact('gender'));
@@ -71,10 +73,10 @@ class GenderController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  string  $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id): RedirectResponse
     {
         $gender = Gender::find($id);
         $gender->update([
@@ -87,10 +89,10 @@ class GenderController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  string  $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(string $id): RedirectResponse
     {
         $gender = Gender::find($id);
         $gender->delete();

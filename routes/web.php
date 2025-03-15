@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\GenderController;
 use App\Http\Controllers\UniverseController;
+use App\Http\Controllers\SuperHeroController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\SuperHeroController;
 use App\Models\Universe;
 
 /*

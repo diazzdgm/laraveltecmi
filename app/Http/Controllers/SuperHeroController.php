@@ -6,15 +6,17 @@ use App\Models\Gender;
 use App\Models\SuperHero;
 use App\Models\Universe;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class SuperHeroController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(): View
     {
         $superheroes = SuperHero::all();
         return view('superheroes.index', compact('superheroes'));
@@ -23,9 +25,9 @@ class SuperHeroController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(): View
     {
         $genders = Gender::select('id', 'name')->get();
         $universes = Universe::select('id', 'name')->get();
@@ -36,9 +38,9 @@ class SuperHeroController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         SuperHero::create([
             'gender_id' => $request->gender_id,
@@ -54,10 +56,10 @@ class SuperHeroController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  string  $id
+     * @return \Illuminate\View\View
      */
-    public function show(string $id)
+    public function show(string $id): View
     {
         $superhero = SuperHero::with(['gender', 'universe'])->find($id);
         return view('superheroes.show', compact('superhero'));
@@ -66,10 +68,10 @@ class SuperHeroController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  string  $id
+     * @return \Illuminate\View\View
      */
-    public function edit($id)
+    public function edit(string $id): View
     {
         $superhero = SuperHero::find($id);
         $genders = Gender::select('id', 'name')->get();
@@ -81,10 +83,10 @@ class SuperHeroController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  string  $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id): RedirectResponse
     {
         $superhero = SuperHero::find($id);
         $superhero->update([
@@ -101,10 +103,10 @@ class SuperHeroController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  string  $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(string $id): RedirectResponse
     {
         $superhero = SuperHero::find($id);
         $superhero->delete();
