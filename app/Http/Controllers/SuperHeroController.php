@@ -8,24 +8,21 @@ use App\Models\Universe;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 class SuperHeroController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\View\View
      */
     public function index(): View
     {
-        $superheroes = SuperHero::all();
+        $superheroes = SuperHero::with(['gender', 'universe'])->get();
         return view('superheroes.index', compact('superheroes'));
     }
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\View\View
      */
     public function create(): View
     {
@@ -36,44 +33,50 @@ class SuperHeroController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request): RedirectResponse
     {
-        SuperHero::create([
-            'gender_id' => $request->gender_id,
-            'real_name' => $request->real_name,    
-            'universe_id' => $request->universe_id,
-            'name' => $request->name,
-            'picture' => $request->picture ?? '',
+        // Validar los datos antes de guardarlos
+        $validatedData = $request->validate([
+            'gender_id' => 'required|exists:genders,id',
+            'universe_id' => 'required|exists:universes,id',
+            'name' => 'required|string|max:255',
+            'real_name' => 'required|string|max:255',
+            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Máximo 2MB
         ]);
-        
-        return to_route('superheroes.index');
+
+        // Manejar la imagen
+        $imagePath = $request->hasFile('picture')
+            ? $request->file('picture')->store('superheroes', 'public')
+            : null;
+
+        // Crear el superhéroe
+        SuperHero::create([
+            'gender_id' => $validatedData['gender_id'],
+            'universe_id' => $validatedData['universe_id'],
+            'name' => $validatedData['name'],
+            'real_name' => $validatedData['real_name'],
+            'picture' => $imagePath,
+        ]);
+
+        return redirect()->route('superheroes.index')->with('success', 'Superhero created successfully!');
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param  string  $id
-     * @return \Illuminate\View\View
      */
     public function show(string $id): View
     {
-        $superhero = SuperHero::with(['gender', 'universe'])->find($id);
+        $superhero = SuperHero::with(['gender', 'universe'])->findOrFail($id);
         return view('superheroes.show', compact('superhero'));
     }
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  string  $id
-     * @return \Illuminate\View\View
      */
     public function edit(string $id): View
     {
-        $superhero = SuperHero::find($id);
+        $superhero = SuperHero::findOrFail($id);
         $genders = Gender::select('id', 'name')->get();
         $universes = Universe::select('id', 'name')->get();
         return view('superheroes.edit', compact('superhero', 'genders', 'universes'));
@@ -81,36 +84,57 @@ class SuperHeroController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $id
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, string $id): RedirectResponse
     {
-        $superhero = SuperHero::find($id);
-        $superhero->update([
-            'gender_id' => $request->gender_id,
-            'real_name' => $request->real_name,
-            'universe_id' => $request->universe_id,
-            'name' => $request->name,
-            'picture' => $request->picture ?? $superhero->picture,
+        $superhero = SuperHero::findOrFail($id);
+
+        // Validar los datos antes de actualizar
+        $validatedData = $request->validate([
+            'gender_id' => 'required|exists:genders,id',
+            'universe_id' => 'required|exists:universes,id',
+            'name' => 'required|string|max:255',
+            'real_name' => 'required|string|max:255',
+            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        
-        return to_route('superheroes.index');
+
+        // Manejar la imagen
+        if ($request->hasFile('picture')) {
+            // Eliminar la imagen anterior si existe
+            if ($superhero->picture) {
+                Storage::disk('public')->delete($superhero->picture);
+            }
+            $imagePath = $request->file('picture')->store('superheroes', 'public');
+        } else {
+            $imagePath = $superhero->picture;
+        }
+
+        // Actualizar el superhéroe
+        $superhero->update([
+            'gender_id' => $validatedData['gender_id'],
+            'universe_id' => $validatedData['universe_id'],
+            'name' => $validatedData['name'],
+            'real_name' => $validatedData['real_name'],
+            'picture' => $imagePath,
+        ]);
+
+        return redirect()->route('superheroes.index')->with('success', 'Superhero updated successfully!');
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  string  $id
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(string $id): RedirectResponse
     {
-        $superhero = SuperHero::find($id);
+        $superhero = SuperHero::findOrFail($id);
+
+        // Eliminar la imagen si existe
+        if ($superhero->picture) {
+            Storage::disk('public')->delete($superhero->picture);
+        }
+
         $superhero->delete();
         
-        return to_route('superheroes.index');
+        return redirect()->route('superheroes.index')->with('success', 'Superhero deleted successfully!');
     }
 }

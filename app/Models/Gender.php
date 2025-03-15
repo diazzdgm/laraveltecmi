@@ -9,4 +9,9 @@ class Gender extends Model
 {
     protected $table = 'gender';
     use HasFactory;
+
+    public function superheroes()
+    {
+        return $this->hasMany(SuperHero::class);
+    }
 }
