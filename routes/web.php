@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\GenderControler;
+use App\Http\Controllers\GenderController;
+use App\Http\Controllers\UniverseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SuperHeroController;
 use App\Models\Universe;
 
 /*
@@ -20,4 +22,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/gender', [GenderControler::class, 'index']);
+Route::resource('gender', GenderController::class);
+Route::resource('superheroes', SuperHeroController::class) ;
+Route::resource('universes', UniverseController::class);
+Route::resource('genders', GenderController::class);
