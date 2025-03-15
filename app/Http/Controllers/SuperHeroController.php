@@ -36,28 +36,30 @@ class SuperHeroController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // dd(SuperHero::create($request->all()));
         // Validar los datos antes de guardarlos
-        $validatedData = $request->validate([
-            'gender_id' => 'required|exists:genders,id',
-            'universe_id' => 'required|exists:universes,id',
-            'name' => 'required|string|max:255',
-            'real_name' => 'required|string|max:255',
-            'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Máximo 2MB
-        ]);
+        // $validatedData = $request->validate([
+        //     'gender_id' => 'required|exists:genders,id',
+        //     'universe_id' => 'required|exists:universes,id',
+        //     'name' => 'required|string|max:255',
+        //     'real_name' => 'required|string|max:255',
+        //     'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:6048', // Máximo 2MB
+        // ]);
 
-        // Manejar la imagen
-        $imagePath = $request->hasFile('picture')
-            ? $request->file('picture')->store('superheroes', 'public')
-            : null;
+        // // Manejar la imagen
+        // $imagePath = $request->hasFile('picture')
+        //     ? $request->file('picture')->store('superheroes', 'public')
+        //     : null;
 
-        // Crear el superhéroe
+        // // Crear el superhéroe
         SuperHero::create([
-            'gender_id' => $validatedData['gender_id'],
-            'universe_id' => $validatedData['universe_id'],
-            'name' => $validatedData['name'],
-            'real_name' => $validatedData['real_name'],
-            'picture' => $imagePath,
+            'gender_id' => $request->input('gender_id'),
+            'universe_id' => $request->input('universe_id'),
+            'name' => $request->input('name'),
+            'real_name' => $request->input('real_name'),
+            //
         ]);
+
 
         return redirect()->route('superheroes.index')->with('success', 'Superhero created successfully!');
     }
@@ -134,7 +136,7 @@ class SuperHeroController extends Controller
         }
 
         $superhero->delete();
-        
+
         return redirect()->route('superheroes.index')->with('success', 'Superhero deleted successfully!');
     }
 }

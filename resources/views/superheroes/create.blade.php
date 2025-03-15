@@ -32,7 +32,7 @@
         <br><br>
 
         <label for="name">Superhero Name</label>
-        <input type="text" name="name" required>
+        <input type="text" name="name"required>
 
         <br><br>
 
@@ -42,7 +42,7 @@
         <br><br>
 
         <label for="picture">Picture</label>
-        <input type="file" name="picture">
+        <input type="file" name="picture" >
 
         <br><br>
 
