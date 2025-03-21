@@ -36,20 +36,6 @@ class SuperHeroController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // dd(SuperHero::create($request->all()));
-        // Validar los datos antes de guardarlos
-        // $validatedData = $request->validate([
-        //     'gender_id' => 'required|exists:genders,id',
-        //     'universe_id' => 'required|exists:universes,id',
-        //     'name' => 'required|string|max:255',
-        //     'real_name' => 'required|string|max:255',
-        //     'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:6048', // Máximo 2MB
-        // ]);
-
-        // // Manejar la imagen
-        // $imagePath = $request->hasFile('picture')
-        //     ? $request->file('picture')->store('superheroes', 'public')
-        //     : null;
 
         // // Crear el superhéroe
         SuperHero::create([
